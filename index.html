@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Weather Pro — Beautiful real-time weather app with 5-day forecast, favorites, geolocation and more.">
+    <meta name="theme-color" content="#4facfe">
+    <title>Weather Pro</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Animated gradient background -->
+    <div class="bg-layer" id="bgLayer"></div>
+    <div class="bg-overlay"></div>
+
+    <!-- Initial Loader -->
+    <div class="loader" id="loader">
+        <div class="loader-inner">
+            <div class="cloud-loader">
+                <i class="ri-cloud-fill"></i>
+            </div>
+            <div class="loader-bar"><span></span></div>
+            <p>Loading Weather Pro...</p>
+        </div>
+    </div>
+
+    <!-- App -->
+    <div class="app" id="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <i class="ri-cloud-windy-fill"></i>
+                <span>Weather Pro</span>
+            </div>
+            <div class="header-actions">
+                <button class="icon-btn" id="unitBtn" title="Toggle °C / °F">
+                    <span id="unitLabel">°C</span>
+                </button>
+                <button class="icon-btn" id="themeBtn" title="Toggle theme">
+                    <i class="ri-moon-clear-line" id="themeIcon"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Search -->
+        <section class="search-section">
+            <div class="search-box">
+                <i class="ri-search-line search-icon"></i>
+                <input type="text" id="cityInput" placeholder="Search city..." autocomplete="off" spellcheck="false">
+                <button class="search-action" id="searchBtn" title="Search">
+                    <i class="ri-arrow-right-line"></i>
+                </button>
+                <button class="search-action location" id="locationBtn" title="Use my location">
+                    <i class="ri-map-pin-user-fill"></i>
+                </button>
+            </div>
+            <div class="chips-row" id="historyChips"></div>
+        </section>
+
+        <!-- Main Weather Card -->
+        <section class="main-card" id="mainCard">
+            <div class="skeleton" id="skeleton">
+                <div class="sk sk-icon"></div>
+                <div class="sk sk-temp"></div>
+                <div class="sk sk-line"></div>
+                <div class="sk sk-grid"></div>
+            </div>
+
+            <div class="weather-body hidden" id="weatherBody">
+                <div class="location-row">
+                    <div>
+                        <h1 id="cityName">—</h1>
+                        <p class="country" id="countryName">—</p>
+                    </div>
+                    <button class="fav-btn" id="favBtn" title="Add to favorites">
+                        <i class="ri-heart-line" id="favIcon"></i>
+                    </button>
+                </div>
+
+                <div class="temp-block">
+                    <img id="weatherIcon" src="" alt="" class="weather-icon">
+                    <div class="temp-info">
+                        <h2 id="tempValue">--°</h2>
+                        <p id="description">—</p>
+                        <p class="feels" id="feelsLike">Feels like --°</p>
+                    </div>
+                </div>
+
+                <div class="stats-grid" id="statsGrid">
+                    <div class="stat">
+                        <i class="ri-drop-fill"></i>
+                        <div>
+                            <span class="label">Humidity</span>
+                            <strong id="humidity">--%</strong>
+                        </div>
+                    </div>
+                    <div class="stat">
+                        <i class="ri-windy-line"></i>
+                        <div>
+                            <span class="label">Wind</span>
+                            <strong id="wind">-- km/h</strong>
+                        </div>
+                    </div>
+                    <div class="stat">
+                        <i class="ri-dashboard-3-line"></i>
+                        <div>
+                            <span class="label">Pressure</span>
+                            <strong id="pressure">-- hPa</strong>
+                        </div>
+                    </div>
+                    <div class="stat">
+                        <i class="ri-eye-line"></i>
+                        <div>
+                            <span class="label">Visibility</span>
+                            <strong id="visibility">-- km</strong>
+                        </div>
+                    </div>
+                    <div class="stat">
+                        <i class="ri-temp-hot-line"></i>
+                        <div>
+                            <span class="label">High</span>
+                            <strong id="tempMax">--°</strong>
+                        </div>
+                    </div>
+                    <div class="stat">
+                        <i class="ri-temp-cold-line"></i>
+                        <div>
+                            <span class="label">Low</span>
+                            <strong id="tempMin">--°</strong>
+                        </div>
+                    </div>
+                    <div class="stat">
+                        <i class="ri-sun-line"></i>
+                        <div>
+                            <span class="label">Sunrise</span>
+                            <strong id="sunrise">--:--</strong>
+                        </div>
+                    </div>
+                    <div class="stat">
+                        <i class="ri-moon-line"></i>
+                        <div>
+                            <span class="label">Sunset</span>
+                            <strong id="sunset">--:--</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error -->
+            <div class="error-box hidden" id="errorBox">
+                <i class="ri-error-warning-fill"></i>
+                <p id="errorText">Something went wrong</p>
+                <button id="retryBtn">Try Again</button>
+            </div>
+        </section>
+
+        <!-- Hourly (next ~24h) -->
+        <section class="section-card hourly-section hidden" id="hourlySection">
+            <h3 class="section-title"><i class="ri-time-line"></i> Next 24 Hours</h3>
+            <div class="hourly-scroll" id="hourlyList"></div>
+        </section>
+
+        <!-- 5-Day Forecast -->
+        <section class="section-card forecast-section hidden" id="forecastSection">
+            <h3 class="section-title"><i class="ri-calendar-line"></i> 5-Day Forecast</h3>
+            <div class="forecast-list" id="forecastList"></div>
+        </section>
+
+        <!-- Favorites -->
+        <section class="section-card favorites-section" id="favoritesSection">
+            <h3 class="section-title"><i class="ri-heart-fill"></i> Favorites</h3>
+            <div class="favorites-list" id="favoritesList">
+                <p class="empty-fav">Use the heart button to save cities</p>
+            </div>
+        </section>
+
+        <!-- Footer meta -->
+        <footer class="footer">
+            <div class="clock">
+                <span id="dayName">—</span>
+                <span id="fullDate">—</span>
+                <span id="liveTime">—</span>
+            </div>
+            <div class="updated">
+                Updated <span id="updatedAt">—</span>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
