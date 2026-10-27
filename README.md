@@ -1,11 +1,4 @@
 
----
-
-### 2. Weather-App README
-
-Replace the entire content of `Weather-App/README.md` with this:
-
-```markdown
 # Weather Pro
 
 A beautiful and fully-featured weather application built with pure HTML, CSS, and JavaScript.
